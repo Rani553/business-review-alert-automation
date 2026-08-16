@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BizPulse — Never Miss a Bad Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f3ff;
+    --bg2: #ffffff;
+    --bg3: #ede9fe;
+    --bg4: #f9f8ff;
+    --border: rgba(109,40,217,0.12);
+    --border2: rgba(109,40,217,0.22);
+    --text: #1a1033;
+    --text2: #6b5f8a;
+    --text3: #a89ec0;
+    --accent: #7c3aed;
+    --accent2: #6d28d9;
+    --accent3: #5b21b6;
+    --accent-glow: rgba(124,58,237,0.12);
+    --accent-light: #ede9fe;
+    --teal: #0d9488;
+    --teal-bg: #f0fdfa;
+    --teal-border: rgba(13,148,136,0.2);
+    --green: #059669;
+    --green-bg: #ecfdf5;
+    --green-border: rgba(5,150,105,0.2);
+    --amber: #d97706;
+    --amber-bg: #fffbeb;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --card-shadow: 0 4px 24px rgba(109,40,217,0.08), 0 1px 4px rgba(109,40,217,0.04);
+    --radius: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+  }
+  [data-theme="dark"] {
+  --bg: #0B1120;
+  --bg2: #111827;
+  --bg3: #1F2937;
+  --bg4: #182233;
+
+  --border: rgba(148,163,184,.12);
+  --border2: rgba(148,163,184,.22);
+
+  --text: #F8FAFC;
+  --text2: #CBD5E1;
+  --text3: #94A3B8;
+
+  --accent: #6366F1;
+  --accent2: #4F46E5;
+  --accent3: #4338CA;
+
+  --accent-glow: rgba(99,102,241,.20);
+  --accent-light: rgba(99,102,241,.12);
+
+  --teal: #2DD4BF;
+  --teal-bg: rgba(45,212,191,.08);
+  --teal-border: rgba(45,212,191,.18);
+
+  --green: #22C55E;
+  --green-bg: rgba(34,197,94,.08);
+  --green-border: rgba(34,197,94,.18);
+
+  --amber: #FBBF24;
+  --amber-bg: rgba(251,191,36,.08);
+
+  --red: #F87171;
+  --red-bg: rgba(248,113,113,.08);
+
+  --card-shadow:
+      0 15px 40px rgba(0,0,0,.45),
+      0 4px 12px rgba(0,0,0,.25);
+}
+  
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem; height: 64px;
+    background: rgba(245,243,255,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s, border-color 0.3s;
+  }
+  [data-theme="dark"] nav {
+    background: rgba(11,17,32,.92);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    backdrop-filter: blur(20px);
+}
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; }
+  .logo .biz { color: var(--text); }
+  .logo .pulse { color: var(--accent); }
+  .nav-right { display: flex; align-items: center; gap: 1rem; }
+  .live-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--green-bg); border: 1px solid var(--green-border);
+    color: var(--green); padding: 0.3rem 0.85rem; border-radius: 100px;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em;
+  }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+  .theme-toggle {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--bg3); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 1rem; transition: all 0.2s;
+    color: var(--text2);
+  }
+  .theme-toggle:hover { background: var(--accent-light); border-color: var(--border2); }
+  [data-theme="dark"] .field input,
+[data-theme="dark"] .field select,
+[data-theme="dark"] .field textarea{
+    background:#1F2937;
+    border:1px solid rgba(255,255,255,.08);
+}
+
+[data-theme="dark"] .field input:focus,
+[data-theme="dark"] .field select:focus{
+    background:#111827;
+    border-color:#6366F1;
+    box-shadow:0 0 0 4px rgba(99,102,241,.20);
+}
+
+[data-theme="dark"] .review-card{
+    background:#111827;
+    border:1px solid rgba(255,255,255,.06);
+}
+[data-theme="dark"] .how-card{
+    background:#111827;
+}
+
+[data-theme="dark"] .how-card:hover{
+    background:#182233;
+}
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 80px 2rem 5rem; position: relative; overflow: hidden;
+  }
+  .hero-blob {
+    position: absolute; pointer-events: none;
+    border-radius: 50%; filter: blur(60px); opacity: 0.3;
+  }
+  .blob1 { width: 500px; height: 500px; background: #a78bfa; top: -100px; left: -100px; }
+  .blob2 { width: 400px; height: 400px; background: #2dd4bf; bottom: -50px; right: -50px; }
+  [data-theme="dark"] .blob1{
+    background:#6366F1;
+    opacity:.12;
+}
+
+[data-theme="dark"] .blob2{
+    background:#14B8A6;
+    opacity:.10;
+}
+  .hero-inner {
+    max-width: 1100px; width: 100%;
+    display: grid; grid-template-columns: 1.1fr 0.9fr;
+    gap: 4rem; align-items: center; position: relative; z-index: 1;
+  }
+  @media(max-width:800px) { .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; } }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent-light); border: 1px solid var(--border2);
+    color: var(--accent); padding: 0.4rem 1rem; border-radius: 100px;
+    font-size: 0.77rem; font-weight: 600; letter-spacing: 0.04em;
+    text-transform: uppercase; margin-bottom: 1.5rem;
+  }
+  .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.06; letter-spacing: -0.04em; margin-bottom: 1.3rem;
+  }
+  .h1-accent { color: var(--accent); }
+  .h1-teal { color: var(--teal); }
+  .hero-desc {
+    font-size: 1.05rem; color: var(--text2); line-height: 1.75;
+    font-weight: 400; margin-bottom: 2.5rem; max-width: 460px;
+  }
+  .stats-row { display: flex; gap: 2.5rem; flex-wrap: wrap; }
+  .stat-item { }
+  .stat-val { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 700; line-height: 1; }
+  .stat-lbl { font-size: 0.75rem; color: var(--text3); margin-top: 4px; letter-spacing: 0.03em; }
+
+  /* FORM CARD */
+  .form-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-xl);
+    padding: 2.25rem;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  [data-theme="dark"] .form-card{
+    background:#111827;
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:
+        0 25px 60px rgba(0,0,0,.50);
+}
+  .card-accent-bar {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--teal) 100%);
+  }
+  .form-head { margin-bottom: 1.75rem; }
+  .form-head-title { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .form-head-sub { font-size: 0.85rem; color: var(--text2); }
+  
+
+  /* PROGRESS */
+  .progress-wrap { display: flex; align-items: center; gap: 0; margin-bottom: 2rem; }
+  .prog-step {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+    position: relative;
+  }
+  .prog-step:not(:last-child)::after {
+    content: ''; position: absolute; top: 15px; left: 50%; width: 100%;
+    height: 2px; background: var(--border); z-index: 0; transition: background 0.3s;
+  }
+  .prog-step.done:not(:last-child)::after { background: var(--accent); }
+  .prog-circle {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--bg3); border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 600; color: var(--text3);
+    position: relative; z-index: 1; transition: all 0.3s;
+  }
+  .prog-step.active .prog-circle { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .prog-step.done .prog-circle { background: var(--green); border-color: var(--green); color: #fff; }
+  .prog-label { font-size: 0.68rem; color: var(--text3); font-weight: 500; white-space: nowrap; }
+  .prog-step.active .prog-label { color: var(--accent); }
+  .prog-step.done .prog-label { color: var(--green); }
+
+  /* STEPS */
+  .form-step { display: none; }
+  .form-step.active { display: block; animation: fadeUp 0.3s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* FIELDS */
+  .field { margin-bottom: 1.2rem; }
+  .field-label {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.8rem; font-weight: 600; color: var(--text2);
+    letter-spacing: 0.02em; margin-bottom: 0.45rem;
+  }
+  .field-req { color: var(--accent); font-size: 0.9rem; }
+  .field input, .field select, .field textarea {
+    width: 100%; padding: 0.72rem 1rem;
+    background: var(--bg4); border: 1.5px solid var(--border);
+    border-radius: var(--radius); color: var(--text);
+    font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 400;
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    -webkit-appearance: none;
+  }
+  .field input:focus, .field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-glow);
+    background: var(--bg2);
+  }
+  .field input::placeholder { color: var(--text3); }
+  .field select option { background: var(--bg2); color: var(--text); }
+  .field-hint { font-size: 0.73rem; color: var(--text3); margin-top: 0.3rem; line-height: 1.4; }
+  .field-hint a { color: var(--accent); text-decoration: none; }
+
+  /* PLACE FINDER (search + select business, replaces manual Place ID entry) */
+  .finder-row { display: flex; gap: 0.55rem; }
+  .finder-row input { flex: 1; }
+  .btn-finder {
+    padding: 0 1.1rem;
+    background: var(--accent); color: #fff; border: none;
+    border-radius: var(--radius); font-family: 'Inter', sans-serif;
+    font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; gap: 6px; white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .btn-finder:hover { background: var(--accent2); }
+  .btn-finder:disabled { opacity: 0.5; cursor: not-allowed; }
+  .finder-spin { width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .finder-state {
+    display: none; align-items: center; gap: 8px;
+    font-size: 0.78rem; color: var(--text3); padding: 0.6rem 0.2rem;
+  }
+  .finder-state.show { display: flex; }
+  .finder-results {
+    display: none; flex-direction: column; gap: 0.5rem; margin-top: 0.6rem;
+    max-height: 240px; overflow-y: auto;
+  }
+  .finder-results.show { display: flex; }
+  .finder-item {
+    background: var(--bg4); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 0.7rem 0.85rem;
+    cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+  }
+  .finder-item:hover { border-color: var(--accent); background: var(--accent-light); }
+  .finder-item-info { flex: 1; min-width: 0; }
+  .finder-item-name { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 0.15rem; }
+  .finder-item-addr { font-size: 0.73rem; color: var(--text2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .finder-item-rating { font-size: 0.72rem; color: var(--amber); font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+  .finder-selected {
+    display: none; align-items: center; justify-content: space-between; gap: 0.6rem;
+    background: var(--green-bg); border: 1.5px solid var(--green-border);
+    border-radius: var(--radius); padding: 0.8rem 0.9rem; margin-top: 0.6rem;
+  }
+  .finder-selected.show { display: flex; }
+  .finder-selected-info { min-width: 0; }
+  .finder-selected-name { font-size: 0.85rem; font-weight: 600; color: var(--green); display: flex; align-items: center; gap: 6px; }
+  .finder-selected-addr { font-size: 0.73rem; color: var(--text2); margin-top: 0.15rem; }
+  .btn-finder-change {
+    background: none; border: none; color: var(--text3); font-size: 0.75rem;
+    font-weight: 600; cursor: pointer; text-decoration: underline; flex-shrink: 0;
+  }
+  .btn-finder-change:hover { color: var(--text); }
+
+  /* TELEGRAM SECTION */
+  .tg-card {
+    background: var(--teal-bg); border: 1.5px solid var(--teal-border);
+    border-radius: var(--radius); padding: 1.3rem; margin-bottom: 1.2rem;
+  }
+  .tg-head { display: flex; align-items: center; gap: 10px; margin-bottom: 0.6rem; }
+  .tg-avatar {
+    width: 38px; height: 38px; border-radius: 12px;
+    background: var(--teal); display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .tg-name { font-size: 0.9rem; font-weight: 600; color: var(--teal); }
+  .tg-subname { font-size: 0.75rem; color: var(--text3); }
+  .tg-desc { font-size: 0.82rem; color: var(--text2); line-height: 1.6; margin-bottom: 1rem; }
+
+  .tg-steps-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.1rem; }
+  .tg-step-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.81rem; color: var(--text2); }
+  .tg-num {
+    width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(13,148,136,0.12); border: 1px solid var(--teal-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.68rem; font-weight: 700; color: var(--teal); margin-top: 1px;
+  }
+  .tg-step-item.done .tg-num { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+
+  .btn-tg {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 0.78rem 1rem;
+    background: var(--teal); color: #fff; border: none;
+    border-radius: var(--radius); font-family: 'Inter', sans-serif;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    text-decoration: none; transition: all 0.2s;
+    letter-spacing: 0.01em;
+  }
+  .btn-tg:hover { background: #0f766e; transform: translateY(-1px); }
+  .tg-verify-row { display: none; margin-top: 0.75rem; }
+  .tg-verify-row.show { display: block; animation: fadeUp 0.25s ease; }
+  .verified-badge {
+    display: none; align-items: center; gap: 6px;
+    color: var(--green); font-size: 0.8rem; font-weight: 600; margin-top: 6px;
+  }
+  .verified-badge.show { display: flex; }
+
+  /* BUTTONS */
+  .btn-primary {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 0.88rem 1.5rem;
+    background: var(--accent); color: #fff; border: none;
+    border-radius: var(--radius); font-family: 'Inter', sans-serif;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; letter-spacing: 0.01em;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124,58,237,0.3); }
+  .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-back {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    width: 100%; padding: 0.72rem; margin-top: 0.6rem;
+    background: transparent; color: var(--text3);
+    border: 1.5px solid var(--border); border-radius: var(--radius);
+    font-family: 'Inter', sans-serif; font-size: 0.85rem; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-back:hover { color: var(--text); border-color: var(--border2); }
+  .spin { width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
+
+  /* ERROR */
+  .err-box {
+    display: none; background: var(--red-bg);
+    border: 1px solid rgba(220,38,38,0.2); border-radius: var(--radius);
+    padding: 0.75rem 1rem; font-size: 0.82rem; color: var(--red);
+    margin-bottom: 1rem; line-height: 1.4;
+  }
+  .err-box.show { display: block; animation: fadeUp 0.2s ease; }
+
+  /* SUCCESS SCREEN */
+  .success-wrap { display: none; }
+  .success-wrap.show { display: block; animation: fadeUp 0.4s ease; }
+  .success-confetti { font-size: 3rem; text-align: center; margin-bottom: 0.5rem; animation: bounce 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
+  @keyframes bounce { from{transform:scale(0) rotate(-10deg)} 60%{transform:scale(1.15) rotate(3deg)} to{transform:scale(1) rotate(0)} }
+  .success-title { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; text-align: center; margin-bottom: 0.4rem; }
+  .success-name { color: var(--accent); }
+  .success-sub { font-size: 0.85rem; color: var(--text2); text-align: center; line-height: 1.6; margin-bottom: 1.5rem; }
+  .success-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .success-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 0.9rem 0.85rem; text-align: center;
+  }
+  .sc-icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .sc-label { font-size: 0.72rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem; }
+  .sc-value { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+  .tg-msg-preview {
+    background: #0a2018; border: 1px solid rgba(52,211,153,0.2);
+    border-radius: var(--radius); padding: 1rem 1.1rem;
+  }
+  .tg-msg-header { display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem; }
+  .tg-msg-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+  .tg-msg-name { font-size: 0.82rem; font-weight: 600; color: #2dd4bf; }
+  .tg-msg-body { font-size: 0.8rem; color: #a7f3d0; line-height: 1.65; }
+  .tg-msg-body strong { color: #fff; }
+  .tg-msg-time { font-size: 0.68rem; color: #4d8a6e; text-align: right; margin-top: 0.4rem; }
+
+  /* HOW IT WORKS */
+  .how { padding: 6rem 2rem; background: var(--bg2); border-top: 1px solid var(--border); }
+  .how-inner { max-width: 960px; margin: 0 auto; }
+  .section-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+  h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.7rem, 3.5vw, 2.5rem); letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+  .section-sub { color: var(--text2); font-size: 1rem; font-weight: 400; max-width: 500px; margin-bottom: 3rem; line-height: 1.65; }
+  .how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 1px; background: var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .how-card { background: var(--bg2); padding: 2rem 1.5rem; transition: background 0.2s; cursor: default; }
+  .how-card:hover { background: var(--bg4); }
+  .how-num { font-family: 'Syne', sans-serif; font-size: 2.8rem; font-weight: 800; color: var(--border2); line-height: 1; margin-bottom: 0.75rem; }
+  .how-icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
+  .how-card h3 { font-family: 'Syne', sans-serif; font-size: 0.98rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .how-card p { font-size: 0.83rem; color: var(--text2); line-height: 1.65; }
+
+  /* REVIEWS PREVIEW */
+  .reviews-section { padding: 5rem 2rem; background: var(--bg); border-top: 1px solid var(--border); }
+  .reviews-inner { max-width: 960px; margin: 0 auto; }
+  .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1rem; margin-top: 2.5rem; }
+  .review-card {
+    background: var(--bg2); border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1.3rem; transition: transform 0.2s, border-color 0.2s;
+  }
+  .review-card:hover { transform: translateY(-2px); border-color: var(--border2); }
+  .review-card.neg { border-left: 4px solid var(--red); }
+  .review-card.pos { border-left: 4px solid var(--green); }
+  .rev-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+  .rev-name { font-weight: 600; font-size: 0.88rem; }
+  .rev-stars { font-size: 0.85rem; }
+  .rev-badge { font-size: 0.68rem; font-weight: 700; padding: 0.18rem 0.6rem; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .badge-neg { background: var(--red-bg); color: var(--red); }
+  .badge-pos { background: var(--green-bg); color: var(--green); }
+  .rev-text { font-size: 0.82rem; color: var(--text2); line-height: 1.55; margin-bottom: 0.5rem; }
+  .rev-reply { font-size: 0.78rem; color: var(--teal); font-style: italic; border-left: 2px solid var(--teal-border); padding-left: 0.6rem; }
+
+  /* FOOTER */
+  footer { padding: 2.5rem 2rem; text-align: center; border-top: 1px solid var(--border); }
+  footer p { color: var(--text3); font-size: 0.82rem; }
+  footer strong { color: var(--accent); }
+  .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; margin-bottom: 0.5rem; }
+
+  @media(max-width:600px){
+    nav { padding: 0 1.25rem; }
+    .hero { padding: 70px 1.25rem 3rem; }
+    .form-card { padding: 1.5rem; }
+    .success-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span class="biz">Biz</span><span class="pulse">Pulse</span></div>
+  <div class="nav-right">
+    <div class="live-badge"><span class="live-dot"></span> Free · Always</div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+      <span id="themeIcon">🌙</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-blob blob1"></div>
+  <div class="hero-blob blob2"></div>
+  <div class="hero-inner">
+
+    <!-- LEFT -->
+    <div>
+      <div class="eyebrow"><span class="eyebrow-dot"></span> Built for local Indian businesses</div>
+      <h1>
+        Your reputation,<br>
+        <span class="h1-accent">protected</span> by<br>
+        <span class="h1-teal">AI. 24/7.</span>
+      </h1>
+      <p class="hero-desc">
+        BizPulse watches your Google Reviews every hour, detects negative feedback using AI, and sends you an instant Telegram alert — with a professional reply already written for you.
+      </p>
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-val" style="color:var(--accent)">₹0</div>
+          <div class="stat-lbl">Monthly cost</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val" style="color:var(--teal)">~5 min</div>
+          <div class="stat-lbl">Alert speed</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">24/7</div>
+          <div class="stat-lbl">Monitoring</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: FORM -->
+    <div class="form-card">
+      <div class="card-accent-bar"></div>
+
+      <div class="form-head">
+        <div class="form-head-title">Start protecting your business</div>
+        <div class="form-head-sub">2 minutes to set up. No app needed.</div>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="progress-wrap" id="progressWrap">
+        <div class="prog-step active" id="ps1">
+          <div class="prog-circle">1</div>
+          <div class="prog-label">Business</div>
+        </div>
+        <div class="prog-step" id="ps2">
+          <div class="prog-circle">2</div>
+          <div class="prog-label">Telegram</div>
+        </div>
+        <div class="prog-step" id="ps3">
+          <div class="prog-circle">3</div>
+          <div class="prog-label">Done!</div>
+        </div>
+      </div>
+
+      <div class="err-box" id="errBox"></div>
+
+      <!-- STEP 1 -->
+      <div class="form-step active" id="step1">
+        <div class="field">
+          <div class="field-label">Business Name <span class="field-req">*</span></div>
+          <input type="text" id="bizName" placeholder="e.g. Sharma Dental Clinic" autocomplete="organization" />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Find your business on Google Maps <span class="field-req">*</span></div>
+          <div class="finder-row">
+            <input type="text" id="finderInput" placeholder="e.g. Sharma Dental Clinic Lucknow" onkeydown="if(event.key==='Enter'){event.preventDefault(); findBusiness();}" />
+            <button type="button" class="btn-finder" id="finderBtn" onclick="findBusiness()">
+              <span id="finderBtnText">🔍 Search</span>
+              <div class="finder-spin" id="finderSpin"></div>
+            </button>
+          </div>
+          <div class="field-hint">Include your city for better results — we'll fetch the exact Google listing so you never have to type a Place ID.</div>
+
+          <div class="finder-state" id="finderNoResult">😕 No businesses found. Try a different name or add your city.</div>
+
+          <div class="finder-results" id="finderResults"></div>
+
+          <div class="finder-selected" id="finderSelected">
+            <div class="finder-selected-info">
+              <div class="finder-selected-name">✅ <span id="finderSelectedName"></span></div>
+              <div class="finder-selected-addr" id="finderSelectedAddr"></div>
+            </div>
+            <button type="button" class="btn-finder-change" onclick="clearFinderSelection()">Change</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Email Address <span class="field-req">*</span></div>
+          <input type="email" id="emailId" placeholder="you@gmail.com" autocomplete="email" />
+          <div class="field-hint">Weekly summary reports will be sent here</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Business Type</div>
+          <select id="bizType">
+            <option value="">Select your business type...</option>
+            <option>Medical Clinic / Hospital</option>
+            <option>Restaurant / Cafe / Dhaba</option>
+            <option>Coaching / Tuition Center</option>
+            <option>Salon / Spa / Beauty Parlour</option>
+            <option>Retail Shop / Showroom</option>
+            <option>Hotel / Lodge / Homestay</option>
+            <option>Gym / Fitness Center</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="toStep2()">
+          Continue — Connect Telegram →
+        </button>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="form-step" id="step2">
+        <div class="tg-card">
+          <div class="tg-head">
+            <div class="tg-avatar">✈️</div>
+            <div>
+              <div class="tg-name">Connect Telegram</div>
+              <div class="tg-subname">Get instant alerts on your phone</div>
+            </div>
+          </div>
+          <p class="tg-desc">One click to connect. No manual entry needed — just tap the button, press Start in Telegram, and you are done.</p>
+
+          <div class="tg-steps-list">
+            <div class="tg-step-item" id="ts1">
+              <div class="tg-num">1</div>
+              <span>Tap the button below — our bot opens automatically in Telegram</span>
+            </div>
+            <div class="tg-step-item" id="ts2">
+              <div class="tg-num">2</div>
+              <span>Press <strong style="color:var(--teal)">"Start"</strong> in the Telegram chat — bot will reply with your Chat ID</span>
+            </div>
+            <div class="tg-step-item" id="ts3">
+              <div class="tg-num">3</div>
+              <span>Paste that number below to verify your connection</span>
+            </div>
+          </div>
+
+          <a class="btn-tg" href="https://t.me/bizpulse_alert_bot?start=register" target="_blank" onclick="onTgClick()">
+            ✈️ Open BizPulse Bot in Telegram
+          </a>
+
+          <div class="tg-verify-row" id="tgVerifyRow">
+            <div class="field" style="margin-bottom:0.4rem">
+              <div class="field-label">Chat ID from bot <span class="field-req">*</span></div>
+              <input type="tel" id="chatIdInput" placeholder="e.g. 5072678575" oninput="onChatIdInput()" />
+              <div class="field-hint">The bot sends you a number after you press Start — paste it here</div>
+            </div>
+            <div class="verified-badge" id="verifiedBadge">✅ Telegram connected successfully!</div>
+          </div>
+        </div>
+
+        <button class="btn-primary" id="submitBtn" onclick="submitForm()" disabled>
+          <span id="submitTxt">Activate Monitoring 🚀</span>
+          <div class="spin" id="spinEl"></div>
+        </button>
+        <button class="btn-back" onclick="toStep1()">← Back to business info</button>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success-wrap" id="successWrap">
+        <div class="success-confetti">🎉</div>
+        <div class="success-title">Welcome to BizPulse, <span class="success-name" id="successName"></span>!</div>
+        <p class="success-sub">Your business is now being monitored 24/7. You will receive a confirmation message on Telegram shortly.</p>
+
+        <div class="success-cards">
+          <div class="success-card">
+            <div class="sc-icon">🔍</div>
+            <div class="sc-label">Monitoring</div>
+            <div class="sc-value">Active now</div>
+          </div>
+          <div class="success-card">
+            <div class="sc-icon">📲</div>
+            <div class="sc-label">Alerts via</div>
+            <div class="sc-value">Telegram</div>
+          </div>
+          <div class="success-card">
+            <div class="sc-icon">🤖</div>
+            <div class="sc-label">AI Analysis</div>
+            <div class="sc-value">Every review</div>
+          </div>
+          <div class="success-card">
+            <div class="sc-icon">📊</div>
+            <div class="sc-label">Reports</div>
+            <div class="sc-value">Weekly email</div>
+          </div>
+        </div>
+
+        <div class="tg-msg-preview">
+          <div class="tg-msg-header">
+            <div class="tg-msg-avatar">✈️</div>
+            <div>
+              <div class="tg-msg-name">BizPulse Monitor</div>
+            </div>
+          </div>
+          <div class="tg-msg-body">
+            ✅ <strong>You're all set!</strong><br><br>
+            BizPulse is now monitoring <strong id="previewBizName">your business</strong> on Google Maps every hour.<br><br>
+            You will receive an alert here whenever a new review is posted — especially negative ones that need your attention.<br><br>
+            🤖 AI will classify every review and suggest a professional reply for you.
+          </div>
+          <div class="tg-msg-time">Just now · ✓✓</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="how-inner">
+    <div class="section-label">How it works</div>
+    <h2>Register once. Protected forever.</h2>
+    <p class="section-sub">No technical knowledge needed. No app to install. Just alerts on your phone when it matters.</p>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">01</div>
+        <div class="how-icon">📝</div>
+        <h3>Fill this form</h3>
+        <p>Enter your business details — we find your exact Google Maps listing for you automatically.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">02</div>
+        <div class="how-icon">🔍</div>
+        <h3>We scan hourly</h3>
+        <p>BizPulse checks your Google Reviews every hour automatically, around the clock.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">03</div>
+        <div class="how-icon">🧠</div>
+        <h3>AI reads every review</h3>
+        <p>Llama AI classifies each review as positive, neutral, or negative with a severity score.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">04</div>
+        <div class="how-icon">📲</div>
+        <h3>You get the alert</h3>
+        <p>Bad review? Telegram message in minutes — with a suggested professional reply ready to copy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAMPLE REVIEWS -->
+<section class="reviews-section">
+  <div class="reviews-inner">
+    <div class="section-label">What you'll catch</div>
+    <h2>Real reviews. Real alerts.</h2>
+    <p class="section-sub">These are the kind of reviews BizPulse detects and alerts you about instantly.</p>
+    <div class="reviews-grid">
+      <div class="review-card neg">
+        <div class="rev-top">
+          <div class="rev-name">Rahul Sharma</div>
+          <div>
+            <span class="rev-stars">⭐☆☆☆☆</span>
+            <span class="rev-badge badge-neg" style="margin-left:6px">Negative · 9/10</span>
+          </div>
+        </div>
+        <p class="rev-text">"Waited 45 minutes with appointment. Staff was very rude when I asked about the delay. Never coming back."</p>
+        <div class="rev-reply">🤖 Suggested: "Dear Rahul, we sincerely apologize for your experience. Please contact us at..."</div>
+      </div>
+      <div class="review-card pos">
+        <div class="rev-top">
+          <div class="rev-name">Priya Mishra</div>
+          <div>
+            <span class="rev-stars">⭐⭐⭐⭐⭐</span>
+            <span class="rev-badge badge-pos" style="margin-left:6px">Positive</span>
+          </div>
+        </div>
+        <p class="rev-text">"Dr. Sharma is excellent! Very professional and explained everything clearly. Highly recommend this clinic."</p>
+        <div class="rev-reply">🤖 Suggested: "Thank you Priya! We're so glad you had a great experience. See you next time!"</div>
+      </div>
+      <div class="review-card neg">
+        <div class="rev-top">
+          <div class="rev-name">Amit Kumar</div>
+          <div>
+            <span class="rev-stars">⭐⭐☆☆☆</span>
+            <span class="rev-badge badge-neg" style="margin-left:6px">Negative · 7/10</span>
+          </div>
+        </div>
+        <p class="rev-text">"The quality has really gone down lately. Prices increased but service has not improved. Very disappointing."</p>
+        <div class="rev-reply">🤖 Suggested: "Dear Amit, we take your feedback seriously. We'd love to make this right..."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo"><span style="color:var(--text)">Biz</span><span style="color:var(--accent)">Pulse</span></div>
+  <p>Built with ❤️ for local Indian businesses · <strong>Free forever</strong></p>
+</footer>
+
+<script>
+  const SUPABASE_URL = 'https://izsosefbaeywgyagheam.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6c29zZWZiYWV5d2d5YWdoZWFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTc5MjYsImV4cCI6MjA5NTg3MzkyNn0.Qt-h6g0phBKRo05gz_Ogu-R1DbYew-R_yg1ainad7U0';
+
+  // n8n webhook that performs the Google Maps / SerpApi lookup server-side.
+  // Only reachable while this page is opened on the same machine (or network) that's running the n8n workflow.
+  const PLACE_SEARCH_WEBHOOK = 'http://n8n-production-9e78c.up.railway.app/webhook/search-business';
+
+  let fData = {};
+  let isDark = false;
+  let selectedPlace = null; // { place_id, name, address, rating, reviews, type }
+
+  function toggleTheme() {
+    isDark = !isDark;
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
+    document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+  }
+
+  function showErr(msg) {
+    const el = document.getElementById('errBox');
+    el.textContent = msg; el.classList.add('show');
+  }
+  function hideErr() { document.getElementById('errBox').classList.remove('show'); }
+
+  /* ---------- Place finder (Step 1) ---------- */
+
+  async function findBusiness() {
+    const query = document.getElementById('finderInput').value.trim() || document.getElementById('bizName').value.trim();
+    if (!query) return showErr('Type your business name (and city) first, then search.');
+    hideErr();
+
+    document.getElementById('finderNoResult').classList.remove('show');
+    document.getElementById('finderResults').classList.remove('show');
+    document.getElementById('finderResults').innerHTML = '';
+    setFinderLoading(true);
+
+    try {
+      const res = await fetch(`${PLACE_SEARCH_WEBHOOK}?q=${encodeURIComponent(query)}`);
+      if (!res.ok) throw new Error('Request failed with status ' + res.status);
+      const data = await res.json();
+      setFinderLoading(false);
+
+      const results = (data && data.success && data.results) ? data.results : [];
+      if (results.length === 0) {
+        document.getElementById('finderNoResult').classList.add('show');
+        return;
+      }
+      renderFinderResults(results);
+    } catch (err) {
+      setFinderLoading(false);
+      showErr('Could not search right now (' + err.message + '). You can try again in a moment.');
+    }
+  }
+
+  function setFinderLoading(loading) {
+    document.getElementById('finderBtnText').textContent = loading ? 'Searching...' : '🔍 Search';
+    document.getElementById('finderSpin').style.display = loading ? 'block' : 'none';
+    document.getElementById('finderBtn').disabled = loading;
+  }
+
+  function renderFinderResults(results) {
+    const list = document.getElementById('finderResults');
+    list.innerHTML = '';
+    results.slice(0, 6).forEach((place) => {
+      if (!place.place_id) return; // skip entries we can't actually use
+      const item = document.createElement('div');
+      item.className = 'finder-item';
+      const rating = place.rating ? `⭐ ${place.rating} (${(place.reviews || 0).toLocaleString()})` : '';
+      const name = place.name || place.title || 'Unknown Business';
+      const address = place.address || 'Address not available';
+      item.innerHTML = `
+        <div class="finder-item-info">
+          <div class="finder-item-name">${name}</div>
+          <div class="finder-item-addr">${address}</div>
+        </div>
+        <div class="finder-item-rating">${rating}</div>
+      `;
+      item.onclick = () => selectFinderPlace(place);
+      list.appendChild(item);
+    });
+    list.classList.add('show');
+  }
+
+  function selectFinderPlace(place) {
+    selectedPlace = place;
+    document.getElementById('finderResults').classList.remove('show');
+    document.getElementById('finderResults').innerHTML = '';
+    document.getElementById('finderNoResult').classList.remove('show');
+
+    document.getElementById('finderSelectedName').textContent = place.name || place.title || 'Selected business';
+    document.getElementById('finderSelectedAddr').textContent = place.address || '';
+    document.getElementById('finderSelected').classList.add('show');
+
+    // Auto-fill the Business Name field if it's still empty
+    const bizNameEl = document.getElementById('bizName');
+    if (!bizNameEl.value.trim()) bizNameEl.value = place.name || place.title || '';
+  }
+
+  function clearFinderSelection() {
+    selectedPlace = null;
+    document.getElementById('finderSelected').classList.remove('show');
+  }
+
+  /* ---------- Step navigation ---------- */
+
+  function toStep2() {
+    const name = document.getElementById('bizName').value.trim();
+    const email = document.getElementById('emailId').value.trim();
+    if (!name) return showErr('Please enter your business name.');
+    if (!selectedPlace || !selectedPlace.place_id) return showErr('Please search for your business and select it from the results.');
+    if (!email || !email.includes('@')) return showErr('Please enter a valid email address.');
+
+    fData = {
+      business_name: name,
+      maps_url: selectedPlace.place_id,
+      email,
+      business_type: document.getElementById('bizType').value
+    };
+    hideErr();
+    document.getElementById('step1').classList.remove('active');
+    document.getElementById('step2').classList.add('active');
+    document.getElementById('ps1').classList.remove('active');
+    document.getElementById('ps1').classList.add('done');
+    document.getElementById('ps1').querySelector('.prog-circle').textContent = '✓';
+    document.getElementById('ps2').classList.add('active');
+  }
+
+  function toStep1() {
+    document.getElementById('step2').classList.remove('active');
+    document.getElementById('step1').classList.add('active');
+    document.getElementById('ps2').classList.remove('active');
+    document.getElementById('ps1').classList.remove('done');
+    document.getElementById('ps1').classList.add('active');
+    document.getElementById('ps1').querySelector('.prog-circle').textContent = '1';
+  }
+
+  function onTgClick() {
+    setTimeout(() => {
+      document.getElementById('tgVerifyRow').classList.add('show');
+      document.getElementById('ts1').classList.add('done');
+      document.getElementById('ts1').querySelector('.tg-num').textContent = '✓';
+      document.getElementById('ts2').classList.add('done');
+      document.getElementById('ts2').querySelector('.tg-num').textContent = '✓';
+    }, 1200);
+  }
+
+  function onChatIdInput() {
+    const val = document.getElementById('chatIdInput').value.trim();
+    const ok = /^\d{5,12}$/.test(val);
+    document.getElementById('verifiedBadge').classList.toggle('show', ok);
+    document.getElementById('submitBtn').disabled = !ok;
+    if (ok) {
+      fData.telegram_chat_id = val;
+      document.getElementById('ts3').classList.add('done');
+      document.getElementById('ts3').querySelector('.tg-num').textContent = '✓';
+    }
+  }
+
+  async function submitForm() {
+    const btn = document.getElementById('submitBtn');
+    const txt = document.getElementById('submitTxt');
+    const sp = document.getElementById('spinEl');
+    btn.disabled = true; txt.textContent = 'Activating...'; sp.style.display = 'block';
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/businesses`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify({
+          business_name: fData.business_name,
+          maps_url: fData.maps_url,
+          telegram_chat_id: fData.telegram_chat_id,
+          email: fData.email,
+          status: 'active'
+        })
+      });
+
+      if (res.ok) {
+        showSuccess();
+      } else {
+        showErr('Something went wrong. Please try again.');
+        btn.disabled = false; txt.textContent = 'Activate Monitoring 🚀'; sp.style.display = 'none';
+      }
+    } catch(e) {
+      showErr('Network error. Please check your connection.');
+      btn.disabled = false; txt.textContent = 'Activate Monitoring 🚀'; sp.style.display = 'none';
+    }
+  }
+
+  function showSuccess() {
+    document.getElementById('step2').classList.remove('active');
+    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('successWrap').classList.add('show');
+    document.getElementById('ps2').classList.remove('active');
+    document.getElementById('ps2').classList.add('done');
+    document.getElementById('ps2').querySelector('.prog-circle').textContent = '✓';
+    document.getElementById('ps3').classList.add('active');
+
+    const name = fData.business_name.split(' ').slice(0,2).join(' ');
+    document.getElementById('successName').textContent = name;
+    document.getElementById('previewBizName').textContent = fData.business_name;
+  }
+</script>
+</body>
+</html>
